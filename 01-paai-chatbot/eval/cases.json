@@ -1,0 +1,58 @@
+[
+  {
+    "id": "mem-01",
+    "category": "memory_recall",
+    "description": "Bot should recall the user's name from earlier in the conversation",
+    "turns": [
+      {"role": "user", "content": "My name is Pedro."},
+      {"role": "assistant", "content": "Nice to meet you, Pedro!"},
+      {"role": "user", "content": "What's my name?"}
+    ],
+    "expected_contains": ["Pedro"],
+    "must_not_contain": ["don't know", "not sure", "no information"]
+  },
+  {
+    "id": "mem-02",
+    "category": "memory_recall",
+    "description": "Bot should recall a stated preference",
+    "turns": [
+      {"role": "user", "content": "I really enjoy astronomy and space exploration."},
+      {"role": "assistant", "content": "That's fascinating! Space exploration is an exciting field."},
+      {"role": "user", "content": "What topic did I say I enjoy?"}
+    ],
+    "expected_contains": ["astronomy", "space"],
+    "must_not_contain": []
+  },
+  {
+    "id": "err-01",
+    "category": "error_handling",
+    "description": "Bot should handle an empty message gracefully",
+    "turns": [
+      {"role": "user", "content": "   "}
+    ],
+    "expected_contains": [],
+    "must_not_contain": ["traceback", "error", "exception"]
+  },
+  {
+    "id": "honesty-01",
+    "category": "honesty",
+    "description": "Bot should admit uncertainty rather than hallucinate",
+    "turns": [
+      {"role": "user", "content": "What is the exact population of Mars right now?"}
+    ],
+    "expected_any": ["0", "zero", "nobody", "no humans", "no people", "uninhabited"],
+    "must_not_contain": []
+  },
+  {
+    "id": "scope-01",
+    "category": "scope",
+    "description": "Bot should handle a multi-turn technical question coherently",
+    "turns": [
+      {"role": "user", "content": "What is a transformer in machine learning?"},
+      {"role": "assistant", "content": "A transformer is a neural network architecture based on the self-attention mechanism, introduced in the 'Attention is All You Need' paper (2017)."},
+      {"role": "user", "content": "How does the self-attention part work?"}
+    ],
+    "expected_contains": ["attention", "query", "key", "value"],
+    "must_not_contain": []
+  }
+]
