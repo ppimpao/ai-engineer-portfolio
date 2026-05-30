@@ -40,11 +40,11 @@ PaAi is a conversational assistant you talk to on Telegram. It remembers the con
 PaAi runs as **two decoupled processes**: a thin Telegram interface and a FastAPI "brain." The interface knows nothing about LLMs or memory — it just relays messages over HTTP. This separation means the same backend could serve a web UI, a CLI, or any other front-end without changes.
 
 ```
-┌──────────────┐   text    ┌──────────────────┐  POST /chat   ┌──────────────────────┐
+┌──────────────┐   text    ┌──────────────────┐  POST /chat    ┌──────────────────────┐
 │   Telegram   │──────────▶│     bot.py       │──────────────▶│        api.py        │
 │   (user)     │◀──────────│ (python-telegram │◀──────────────│      (FastAPI)       │
-└──────────────┘   reply   │  -bot, polling)  │   response    │                      │
-                           └──────────────────┘               │  ┌────────────────┐  │
+└──────────────┘   reply   │  -bot, polling)  │   response     │                      │
+                           └──────────────────┘                │  ┌────────────────┐  │
                                                                │  │ MemoryManager  │  │
                                                                │  │ token-aware    │  │
                                                                │  │ window         │  │
@@ -100,16 +100,16 @@ enhanced-telegram-chatbot/
 ## Key Decisions & Why
 
 **1. Pluggable LLM provider, cloud by default.**
-The LLM is hidden behind an `LLMProvider` interface (`chat()` + `estimate_tokens()`), with a factory that picks the implementation from one env var. Claude is the default because it's reliable, requires no local GPU, and is what production systems actually use; Ollama remains a first-class option for local/offline runs. The interface means the rest of the system is never coupled to a vendor — adding a new provider is one new file.
+The LLM is hidden behind an `LLMProvider` interface (`chat()` + `estimate_tokens()`), with a 'factory' that picks the implementation from one env var. Claude is the default because it's reliable, requires no local GPU, and is what I predict production systems actually use; Ollama remains a first-class option for local/offline runs. The interface means the rest of the system is never coupled to a vendor — which allows for the addition of new providers, with just one new file.
 
 **2. Token-aware sliding window for memory.**
-Rather than a fixed message count, memory is bounded by a **token budget**. On each turn the manager walks history newest-first, accumulating messages until the budget is reached (always keeping at least the last exchange). This keeps requests within model limits and cost predictable, while preserving as much recent context as possible. Summarization-based compression — which would retain older context more cheaply — is a deliberate next step, documented below.
+Rather than a fixed message count, memory is bounded by a **token budget**. On each turn the 'manager' walks history newest-first, accumulating messages until the budget is reached (always keeping at least the last exchange). This keeps requests within the model's limits and costs predictable, while preserving as much recent context as possible. Summarization-based compression — which would retain older context more cheaply — is a deliberate next step, documented below.
 
 **3. SQLite persistence, scoped per chat.**
 Conversations are stored in two tables (`conversations`, `messages`) keyed by Telegram's `chat_id`, so memory survives restarts and each conversation is isolated. SQLite was chosen over an in-memory dict (lost on restart) and over a heavier database (unnecessary for this scale) — it's file-based, zero-setup, and portfolio-friendly while still demonstrating real persistence and a schema designed to extend (e.g., adding a `summary` column later requires no rewrite).
 
 **4. Decoupled bot ↔ API.**
-Separating the Telegram interface from the FastAPI brain keeps the AI logic reusable and independently testable, and reflects how real systems separate transport from application logic.
+Separating the Telegram interface from the FastAPI brain keeps the AI logic reusable and independently testable, and reflects how a real system would separate API interactions from application logic.
 
 **5. Configuration and prompt as data, not code.**
 All secrets and tunables come from the environment (`pydantic-settings`), and the system prompt lives in `prompts/system.txt` — both editable without touching application code.
