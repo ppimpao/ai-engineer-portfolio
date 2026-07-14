@@ -11,10 +11,11 @@ This repository is a living portfolio. Each project is a self-contained, runnabl
 | # | Project | What it demonstrates | Status |
 |---|---------|----------------------|--------|
 | 01 | **[PaAi — Personal Assistant AI](./01-paai-chatbot)** | LLM API integration, persistent token-aware memory, pluggable provider backend, FastAPI service design, evaluation | ✅ Complete |
-| 02 | **[Space Document RAG System](./02-space-rag)** | Embeddings, vector search, retrieval pipelines, RAG evaluation (RAGAS) | ⚪ Planned |
-| 03 | **[Space Data Research Agent](./03-space-agent)** | LangGraph, tool use, agent state management, human-in-the-loop | ⚪ Planned |
-| 04 | **[Multi-Agent Team](./04-multi-agent)** | Multi-agent orchestration, role design, task synthesis | ⚪ Planned |
-| 05 | **[Fine-tuned Model](./05-fine-tuned-model)** | LoRA fine-tuning, dataset creation, evaluation, deployment | ⚪ Planned |
+| 02 | **[Semantic Search Engine](https://github.com/ppimpao/semantic-search-engine.git)** | Space Domain — dense retrieval over arXiv astro-ph abstracts with an evaluation harness that overturned my own model hypothesis (0.93 vs 0.80 Hit@1) | ✅ Complete|
+| 03 | **[Space Document RAG System](./02-space-rag)** | Embeddings, vector search, retrieval pipelines, RAG evaluation (RAGAS) | ⚪ Planned |
+| 04 | **[Space Data Research Agent](./03-space-agent)** | LangGraph, tool use, agent state management, human-in-the-loop | ⚪ Planned |
+| 05 | **[Multi-Agent Team](./04-multi-agent)** | Multi-agent orchestration, role design, task synthesis | ⚪ Planned |
+| 06 | **[Fine-tuned Model](./05-fine-tuned-model)** | LoRA fine-tuning, dataset creation, evaluation, deployment | ⚪ Planned |
 
 **Legend:** ✅ Complete · 🟡 In Progress · ⚪ Planned
 
