@@ -65,7 +65,7 @@
 - DeepLearning.AI — LangChain Chat with Your Data, Building Agentic RAG
 - Model Context Protocol (MCP) fundamentals
 - Evaluation with RAGAS and the LLM-as-judge pattern
-- **Project 2 — Space Document RAG System**
+- **Project 3 — Space Document RAG System**
 
 ---
 
@@ -77,8 +77,8 @@
 - LangGraph for state machines and control flow
 - Observability and tracing (LangSmith)
 - Multi-agent orchestration (CrewAI, AutoGen, Deep Agents)
-- **Project 3 — Space Data Research Agent**
-- **Project 4 — Multi-Agent Team**
+- **Project 4 — Space Data Research Agent**
+- **Project 5 — Multi-Agent Team**
 
 ---
 
@@ -90,7 +90,7 @@
 - LoRA / PEFT, custom datasets, evaluation
 - MLOps basics: experiment tracking (W&B), containerization (Docker)
 - Deployment with FastAPI, monitoring, and logging
-- **Project 5 — Fine-tuned Model** + a space-adjacent capstone
+- **Project 6 — Fine-tuned Model** + a space-adjacent capstone
 
 ---
 
