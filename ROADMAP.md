@@ -9,7 +9,7 @@
 | Phase | Focus | Status |
 |-------|-------|--------|
 | Phase 1 | ML & Deep Learning Foundations | 🟢 Complete |
-| Phase 2 | LLM Fundamentals | 🟡 In Progress |
+| Phase 2 | LLM Fundamentals | 🟢 Complete |
 | Phase 3 | RAG & Retrieval Systems | ⚪ Planned |
 | Phase 4 | AI Agents | ⚪ Planned |
 | Phase 5 | Fine-tuning & Deployment | ⚪ Planned |
