@@ -1,8 +1,8 @@
 # PaAi — Personal Assistant AI
 
-> PaAi is a Telegram chatbot. It keeps a memory of each conversation. The memory survives restarts. PaAi uses a pluggable LLM backend and runs on a decoupled FastAPI service. By default, PaAi uses Claude (Anthropic).
+> PaAi is a Telegram chatbot with a memory that keeps the context of each conversation and survives restarts. PaAi uses a pluggable LLM backend and runs on a decoupled FastAPI service, with Claude (Anthropic) as the default provider.
 
-PaAi is a conversational assistant. You talk to PaAi on Telegram. PaAi remembers the context of your conversation across messages and across restarts. PaAi answers in natural language. The design lets you swap the AI engine, cloud or local, without changing the chat interface.
+PaAi is a conversational assistant that you talk to on Telegram. PaAi remembers the context of your conversation across messages and across restarts, and answers in natural language. The design lets you swap the AI engine, cloud or local, without changing the chat interface.
 
 ---
 
@@ -19,26 +19,26 @@ PaAi is a conversational assistant. You talk to PaAi on Telegram. PaAi remembers
 
 ![PaAi demo — conversation with memory recall](assets/demo.gif)
 
-*This is a real conversation. It shows that PaAi recalls earlier context in the same chat.*
+*This is a real conversation, showing PaAi as it recalls earlier context in the same chat.*
 
 ---
 
 ## Features
 
-- 💬 **Natural conversation** on Telegram. PaAi works in private chats and in groups. In a group, PaAi answers only when a user mentions it.
-- 🧠 **Persistent memory** — PaAi stores conversations in SQLite. The memory survives restarts. Each chat has its own memory.
-- 📏 **Token-aware context window** — PaAi sends as much recent history as fits a configurable token budget. When the budget is full, PaAi trims the oldest messages first.
-- 🔌 **Pluggable LLM backend** — PaAi uses Claude (cloud, default) or Ollama (local). Set one environment variable to select the backend.
-- ⚙️ **Configuration through environment variables** — the code holds no secrets.
-- 🛡️ **Graceful error handling** — a guard blocks empty input. If the backend fails, PaAi shows a friendly message instead of a crash.
-- 🧪 **Tests and evaluation** — unit tests cover the memory layer. A behavioral evaluation suite runs against the live model.
+- 💬 **Natural conversation** on Telegram, in private chats and in groups. In a group, PaAi answers only when a user mentions it.
+- 🧠 **Persistent memory** — PaAi stores conversations in SQLite, so the memory survives restarts and each chat keeps its own history.
+- 📏 **Token-aware context window** — PaAi sends as much recent history as fits a configurable token budget, and trims the oldest messages first when the budget is full.
+- 🔌 **Pluggable LLM backend** — PaAi uses Claude (cloud, default) or Ollama (local), selected through one environment variable.
+- ⚙️ **Configuration through environment variables**, so the code holds no secrets.
+- 🛡️ **Graceful error handling** — a guard blocks empty input, and a friendly message replaces a crash if the backend fails.
+- 🧪 **Tests and evaluation** — unit tests cover the memory layer, and a behavioral evaluation suite runs against the live model.
 - 🤖 **Commands** — `/start`, `/help`, `/clear` (erase memory), `/memory` (show usage statistics)
 
 ---
 
 ## Architecture
 
-PaAi runs as **two decoupled processes**: a thin Telegram interface and a FastAPI "brain." The interface does not know about the LLM or the memory. The interface only relays messages over HTTP. Because of this separation, the same backend can serve a web UI, a CLI, or any other front-end without changes.
+PaAi runs as **two decoupled processes**: a thin Telegram interface and a FastAPI "brain." The interface does not know about the LLM or the memory, and only relays messages over HTTP. Because of this separation, the same backend can serve a web UI, a CLI, or any other front-end without changes.
 
 ```
 ┌──────────────┐   text    ┌──────────────────┐  POST /chat    ┌──────────────────────┐
@@ -69,7 +69,7 @@ PaAi runs as **two decoupled processes**: a thin Telegram interface and a FastAP
                                                               └──────────┘ └──────────┘
 ```
 
-**Request flow:** A user sends a message to `bot.py`. `bot.py` forwards the message to `POST /chat`. The API stores the message. `MemoryManager` builds a context window from the history, within the token budget. The configured `LLMProvider` generates a reply. The API stores the reply. The API returns the reply to the user.
+**Request flow:** a user sends a message to `bot.py`, which forwards it to `POST /chat`. The API stores the message, and `MemoryManager` builds a context window from the history, within the token budget. The configured `LLMProvider` generates a reply, which the API stores and returns to the user.
 
 ### Project structure
 
@@ -101,25 +101,25 @@ enhanced-telegram-chatbot/
 ## Key Decisions & Why
 
 **1. Pluggable LLM provider, cloud by default.**
-An `LLMProvider` interface hides the LLM. The interface exposes `chat()` and `estimate_tokens()`. A factory picks the implementation from one environment variable. Claude is the default provider. Claude is reliable. Claude needs no local GPU. I predict that production systems use a cloud provider like Claude. Ollama stays as a first-class option for local and offline runs. The interface decouples the rest of the system from any one vendor. A new provider needs only one new file.
+An `LLMProvider` interface hides the LLM behind two methods, `chat()` and `estimate_tokens()`, and a factory picks the implementation from one environment variable. Claude is the default provider because it is reliable, needs no local GPU, and — I predict — is what production systems actually use; Ollama stays as a first-class option for local and offline runs. The interface decouples the rest of the system from any one vendor, so a new provider needs only one new file.
 
 **2. Token-aware sliding window for memory.**
-A **token budget** bounds the memory, not a fixed message count. On each turn, the manager reads the history from newest to oldest. The manager adds messages until the budget is full. The manager always keeps at least the last exchange. This approach keeps each request within the limits of the model. This approach keeps the cost predictable. This approach preserves as much recent context as possible. A cheaper approach would compress older context through summarization. This is a deliberate next step. See the "Known Limitations & Future Work" section below.
+A **token budget** bounds the memory, rather than a fixed message count. On each turn, the manager reads the history from newest to oldest and adds messages until the budget is full, always keeping at least the last exchange. This approach keeps each request within the limits of the model and the cost predictable, while preserving as much recent context as possible. A cheaper approach would compress older context through summarization; this is a deliberate next step, covered in "Known Limitations & Future Work" below.
 
 **3. SQLite persistence, scoped per chat.**
-Two tables store the conversations: `conversations` and `messages`. Telegram's `chat_id` keys both tables. Because of this, memory survives restarts, and each conversation stays isolated from the others. I chose SQLite over an in-memory dictionary, because a dictionary loses its data on restart. I chose SQLite over a heavier database, because this project does not need that scale. SQLite is file-based. SQLite needs zero setup. SQLite fits a portfolio project well. SQLite still demonstrates real persistence and a schema that extends easily. For example, a later `summary` column needs no rewrite.
+Two tables, `conversations` and `messages`, store the conversations and are keyed by Telegram's `chat_id`, so memory survives restarts and each conversation stays isolated from the others. I chose SQLite over an in-memory dictionary, which loses its data on restart, and over a heavier database, which this project does not need at this scale. SQLite is file-based and needs zero setup, which fits a portfolio project well, yet it still demonstrates real persistence and a schema that extends easily — for example, a later `summary` column needs no rewrite.
 
 **4. Decoupled bot and API.**
-The separation of the Telegram interface from the FastAPI brain keeps the AI logic reusable. The separation lets each part be tested on its own. The separation reflects how a real system separates API interactions from application logic.
+Separating the Telegram interface from the FastAPI brain keeps the AI logic reusable and lets each part be tested on its own, reflecting how a real system separates API interactions from application logic.
 
 **5. Configuration and the prompt as data, not code.**
-All secrets and tunable values come from the environment, through `pydantic-settings`. The system prompt lives in `prompts/system.txt`. A user can edit both without a change to the application code.
+All secrets and tunable values come from the environment, through `pydantic-settings`, and the system prompt lives in `prompts/system.txt` — so a user can edit both without a change to the application code.
 
 ---
 
 ## Evaluation
 
-A chatbot that runs is not the same as a chatbot that works. PaAi includes a small behavioral evaluation suite, `eval/run_eval.py`. This suite runs scripted conversations through the live model. This suite checks the final response for expected content and for forbidden content.
+A chatbot that runs is not the same as a chatbot that works. PaAi includes a small behavioral evaluation suite, `eval/run_eval.py`, that runs scripted conversations through the live model and checks the final response for expected and forbidden content.
 
 **Categories tested:**
 
@@ -135,10 +135,10 @@ A chatbot that runs is not the same as a chatbot that works. PaAi includes a sma
 
 Two of these checks found real issues during development:
 
-- **`err-01` found a product bug.** The code forwarded a whitespace-only message straight to the model. The model rejects empty content with an HTTP 400 error. The fix adds an input guard. The guard handles empty input before the code calls the LLM.
-- **`honesty-01` found a flaw in the evaluation itself.** The model answered the "population of Mars" question well: "0 — no humans live on Mars." The test still failed at first, because the test required every listed synonym to appear. That assertion was poorly specified, not the model's answer. So the framework gained `expected_any` semantics: at least one match is enough. This case is a reminder that an evaluation harness also needs scrutiny.
+- **`err-01` found a product bug.** The code forwarded a whitespace-only message straight to the model, which rejects empty content with an HTTP 400 error. The fix adds an input guard that handles empty input before the code calls the LLM.
+- **`honesty-01` found a flaw in the evaluation itself.** The model answered the "population of Mars" question well — "0 — no humans live on Mars" — but the test still failed at first, because it required every listed synonym to appear. That assertion was poorly specified, not the model's answer, so the framework gained `expected_any` semantics, where at least one match is enough. This case is a reminder that an evaluation harness also needs scrutiny.
 
-Run the suite yourself. The suite needs a configured provider:
+Run the suite yourself, once you have a configured provider:
 
 ```bash
 python eval/run_eval.py
@@ -148,13 +148,13 @@ python eval/run_eval.py
 
 ## Testing
 
-Unit tests cover the memory layer in isolation. These tests need no API key and no network connection. These tests use a mock provider and a temporary database:
+Unit tests cover the memory layer in isolation, needing no API key or network connection, since they use a mock provider and a temporary database:
 
 ```bash
 python -m pytest tests/ -v
 ```
 
-The tests verify message storage and retrieval. The tests verify memory clearing. The tests verify **conversation isolation**: one chat cannot see the history of another chat. The tests verify that the token window trims the oldest messages first, when the window goes over budget. Current status: `4/4 passed`.
+The tests verify message storage and retrieval, memory clearing, **conversation isolation** (one chat cannot see the history of another chat), and that the token window trims the oldest messages first when it goes over budget. Current status: `4/4 passed`.
 
 ---
 
@@ -176,7 +176,7 @@ pip install -r requirements.txt
 ```bash
 cp .env.example .env
 ```
-Edit `.env`. Set at least `TELEGRAM_TOKEN`, `BOT_USERNAME`, and `CLAUDE_API_KEY`. To run PaAi locally instead, set `LLM_PROVIDER=ollama`.
+Edit `.env` and set at least `TELEGRAM_TOKEN`, `BOT_USERNAME`, and `CLAUDE_API_KEY`; to run PaAi locally instead, set `LLM_PROVIDER=ollama`.
 
 ### 3. Run (two terminals)
 ```bash
@@ -186,28 +186,28 @@ uvicorn api:app --reload
 # Terminal 2 — the bot
 python bot.py
 ```
-Send a message to your bot on Telegram. Introduce your name, then ask the bot to recall it. Use `/memory` to check context usage. Use `/clear` to reset the memory.
+Send a message to your bot on Telegram: introduce your name, then ask the bot to recall it. Use `/memory` to check context usage and `/clear` to reset the memory.
 
 ---
 
 ## Known Limitations & Future Work
 
 - **Memory is a sliding window, not a summary.** PaAi drops very old context instead of compressing it. *Next step: build a summary-based memory that condenses older turns into a running summary.*
-- **The API has no authentication.** The `/chat` endpoint is open. The endpoint assumes a trusted local network. A production system would need an API key or a token check.
+- **The API has no authentication.** The `/chat` endpoint is open and assumes a trusted local network; a production system would need an API key or a token check.
 - **Conversations are stored in plaintext.** Each `chat_id` isolates its data, but the data is not encrypted at rest. *Next step: add encryption at rest.*
-- **The bot uses polling, not webhooks.** Polling works well for development and for demos. A production system would use webhooks, for lower latency and better scale.
-- **Voice input and output (TTS/STT) are not included.** An earlier internship version supported voice messages, through gTTS and Google Speech. I scoped voice out of this version on purpose, to keep the project focused on core LLM-application skills. Voice remains a natural future extension.
+- **The bot uses polling, not webhooks.** Polling works well for development and demos, while webhooks would be the production choice for lower latency and better scale.
+- **Voice input and output (TTS/STT) are not included.** An earlier internship version supported voice messages through gTTS and Google Speech, but I scoped voice out of this version on purpose to keep the project focused on core LLM-application skills. Voice remains a natural future extension.
 
 ---
 
 ## Background & Learnings
 
-PaAi is the first portfolio project in my deliberate transition from software developer to **AI Engineer**. I document this transition in my [learning roadmap](../ROADMAP.md). PaAi began as a chatbot that I built during my degree internship (*Estágio*). I rebuilt PaAi from the ground up, to demonstrate the fundamentals of a production-minded LLM application: API integration, conversation memory, structured configuration, error handling, and — importantly — measurement of whether the system actually works.
+PaAi is the first portfolio project in my deliberate transition from software developer to **AI Engineer**, documented in my [learning roadmap](../ROADMAP.md). PaAi began as a chatbot that I built during my degree internship (*Estágio*), and I rebuilt it from the ground up to demonstrate the fundamentals of a production-minded LLM application: API integration, conversation memory, structured configuration, error handling, and — importantly — measurement of whether the system actually works.
 
 The rebuild taught me a few lessons:
 
-- **The original version had a hardcoded API token, global mutable state shared across all users, and an in-memory dictionary that vanished on restart.** I reworked these into environment-based configuration, per-chat isolation, and SQLite persistence. This rework was a lesson in the gap between "it runs" and "it is sound."
-- **Evaluation changes how you build.** Writing behavioral tests surfaced a real input-handling bug. The same tests forced me to fix my own evaluation logic. This is exactly the feedback loop that the role demands.
-- **Modern Python moves fast.** To run PaAi on Python 3.14, I resolved a native-wheel build failure, because some dependencies were too old for the interpreter. I also resolved two asyncio and `requests` issues tied to Python 3.12 and later. This is practical environment debugging that tutorials rarely show.
+- **The original version had a hardcoded API token, global mutable state shared across all users, and an in-memory dictionary that vanished on restart.** I reworked these into environment-based configuration, per-chat isolation, and SQLite persistence — a lesson in the gap between "it runs" and "it is sound."
+- **Evaluation changes how you build.** Writing behavioral tests surfaced a real input-handling bug and forced me to fix my own evaluation logic, exactly the feedback loop that the role demands.
+- **Modern Python moves fast.** To run PaAi on Python 3.14, I resolved a native-wheel build failure, because some dependencies were too old for the interpreter, and two asyncio and `requests` issues tied to Python 3.12 and later — practical environment debugging that tutorials rarely show.
 
-The goal was never the most advanced chatbot possible. The goal was a clean, honest, well-measured demonstration of the core technologies, built to be understood.
+The goal was never the most advanced chatbot possible, but a clean, honest, well-measured demonstration of the core technologies, built to be understood.
