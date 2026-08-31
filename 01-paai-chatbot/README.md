@@ -19,7 +19,7 @@ PaAi is a conversational assistant. You talk to PaAi on Telegram. PaAi remembers
 
 ![PaAi demo — conversation with memory recall](assets/demo.gif)
 
-*This is a real conversation. It shows PaAi that recalls earlier context in the same chat.*
+*This is a real conversation. It shows that PaAi recalls earlier context in the same chat.*
 
 ---
 
