@@ -1,6 +1,6 @@
 # Space Document RAG System
 
-> **Status: ⚪ Planned** — Portfolio Project 2.
+> **Status: ⚪ Planned** — Portfolio Project 3.
 
 A retrieval-augmented generation (RAG) system over real space-domain documents — NASA mission reports, ESA research papers, and Copernicus environmental data.
 
