@@ -36,7 +36,7 @@
 
 ---
 
-## 📚 Phase 2 — LLM Fundamentals *(in progress)*
+## 📚 Phase 2 — LLM Fundamentals
 
 **Goal:** Understand how LLMs work in practice and how to build reliable applications on top of them.
 
@@ -56,7 +56,7 @@
 
 ---
 
-## 🔍 Phase 3 — RAG & Retrieval Systems *(planned)*
+## 🔍 Phase 3 — RAG & Retrieval Systems *(in progress)*
 
 **Goal:** Build retrieval-augmented systems and learn to evaluate retrieval quality.
 
