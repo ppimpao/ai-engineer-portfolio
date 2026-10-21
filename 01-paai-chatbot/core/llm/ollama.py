@@ -1,6 +1,10 @@
+import logging
+
 from ollama import AsyncClient
 from typing import List, Dict
-from .base import LLMProvider
+from .base import LLMProvider, mark_if_cut
+
+logger = logging.getLogger(__name__)
 
 
 class OllamaProvider(LLMProvider):
@@ -11,7 +15,10 @@ class OllamaProvider(LLMProvider):
     async def chat(self, messages: List[Dict[str, str]], system: str) -> str:
         full_messages = [{"role": "system", "content": system}] + messages
         response = await self.client.chat(model=self.model, messages=full_messages)
-        return response["message"]["content"]
+        hit_limit = response.get("done_reason") == "length"
+        if hit_limit:
+            logger.warning("%s reached its output limit; reply was cut", self.model)
+        return mark_if_cut(response["message"]["content"], hit_limit)
 
     def estimate_tokens(self, text: str) -> int:
         return max(1, len(text) // 4)

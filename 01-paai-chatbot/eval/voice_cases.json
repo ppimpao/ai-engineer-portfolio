@@ -1,0 +1,66 @@
+[
+  {
+    "id": "voice-stt-01",
+    "category": "transcription",
+    "description": "A known recording is transcribed with its key facts",
+    "kind": "transcribe",
+    "audio": "eval/audio/known_phrase.ogg",
+    "expected_contains": ["pedro", "saturn"],
+    "expected_language": ["eng", "en"]
+  },
+  {
+    "id": "voice-err-01",
+    "category": "error_handling",
+    "description": "A silent voice note never reaches the LLM and gets a friendly reply",
+    "kind": "voice_turn",
+    "audio": "eval/audio/silence.ogg",
+    "expected_fallback": "empty_transcript",
+    "max_llm_calls": 0,
+    "must_not_contain": ["traceback", "error", "exception"]
+  },
+  {
+    "id": "voice-rt-01",
+    "category": "round_trip",
+    "description": "Text → speech → text keeps the key words",
+    "kind": "round_trip",
+    "text": "The quick brown fox jumps over the lazy dog.",
+    "expected_contains": ["fox", "lazy", "dog"],
+    "expected_language": ["eng", "en"]
+  },
+  {
+    "id": "voice-pt-01",
+    "category": "multilingual",
+    "description": "Portuguese survives text → speech → text and is detected as Portuguese",
+    "kind": "round_trip",
+    "text": "Um eclipse acontece quando a Lua passa entre a Terra e o Sol.",
+    "expected_contains": ["eclipse", "lua", "terra", "sol"],
+    "expected_language": ["por", "pt"]
+  },
+  {
+    "id": "voice-sum-01",
+    "category": "speech_summary",
+    "description": "A long structured answer becomes a short, complete, faithful spoken summary",
+    "kind": "spoken_reply",
+    "question": "Explain how rockets work in detail",
+    "answer_file": "eval/fixtures/rockets_answer.md",
+    "expected_spoken_by": "summary",
+    "max_chars": 500,
+    "ends_with_sentence": true,
+    "no_markdown": true,
+    "expected_any": ["newton", "third law", "thrust", "opposite"]
+  },
+  {
+    "id": "voice-sum-02",
+    "category": "speech_summary",
+    "description": "Code is described in words, never read aloud",
+    "kind": "spoken_reply",
+    "question": "Write a Python function that reverses a string",
+    "answer_file": "eval/fixtures/code_answer.md",
+    "expected_spoken_by": "summary",
+    "max_chars": 500,
+    "ends_with_sentence": true,
+    "no_markdown": true,
+    "expected_any": ["revers", "backward"],
+    "must_not_contain": ["def reverse", "[::-1]", "::", "print("]
+  }
+]
