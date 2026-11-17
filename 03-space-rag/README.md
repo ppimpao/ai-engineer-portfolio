@@ -12,4 +12,4 @@ A retrieval-augmented generation (RAG) system over real space-domain documents â
 - A query interface
 - **Retrieval-quality evaluation with RAGAS**, with documented results
 
-See the [roadmap](../ROADMAP.md#-phase-3--rag--retrieval-systems-planned) for where this fits in the journey.
+See the [roadmap](../ROADMAP.md#-phase-3--rag--retrieval-systems-in-progress) for where this fits in the journey.

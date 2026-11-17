@@ -1,6 +1,6 @@
 # Fine-tuned Model
 
-> **Status: ⚪ Planned** — Portfolio Project 5.
+> **Status: ⚪ Planned** — Portfolio Project 6.
 
 A fine-tuning project exploring LoRA / PEFT as a deliberate design decision — understanding when fine-tuning beats RAG or prompting, and shipping the result.
 

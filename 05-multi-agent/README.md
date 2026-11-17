@@ -1,6 +1,6 @@
 # Multi-Agent Team
 
-> **Status: ⚪ Planned** — Portfolio Project 4.
+> **Status: ⚪ Planned** — Portfolio Project 5.
 
 A multi-agent system where specialized agents collaborate to complete a task, coordinating roles and synthesizing a combined output.
 

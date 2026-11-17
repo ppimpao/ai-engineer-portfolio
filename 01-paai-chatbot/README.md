@@ -8,13 +8,6 @@ PaAi is an assistant you talk to on Telegram, by text or by voice note. It remem
 
 ## Demo
 
-<!--
-  📹 DEMO PLACEHOLDER
-  Record a short GIF showing: (1) a greeting with your name, (2) a follow-up
-  that proves memory recall, (3) the /memory command. Save it as:
-      assets/demo.gif
-  and it will render here automatically. (Create the assets/ folder if needed.)
--->
 
 ![PaAi demo, a conversation with memory recall](assets/demo.gif)
 
@@ -96,7 +89,7 @@ PaAi runs as **two separate processes**, a thin Telegram interface and a FastAPI
 ### Project structure
 
 ```
-enhanced-telegram-chatbot/
+01-paai-chatbot/
 ├── bot.py                  # Telegram interface (polling, commands, voice notes)
 ├── api.py                  # FastAPI service: /chat, /voice/chat, /memory, /health
 ├── core/
