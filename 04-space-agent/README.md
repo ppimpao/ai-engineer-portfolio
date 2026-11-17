@@ -1,6 +1,6 @@
 # Space Data Research Agent
 
-> **Status: ⚪ Planned** — Portfolio Project 3.
+> **Status: ⚪ Planned** — Portfolio Project 4.
 
 A research agent that pulls from space-related data sources — NASA APIs, ESA Copernicus data, and space-weather feeds — to answer questions and synthesize findings.
 

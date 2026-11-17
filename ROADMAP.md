@@ -10,7 +10,7 @@
 |-------|-------|--------|
 | Phase 1 | ML & Deep Learning Foundations | 🟢 Complete |
 | Phase 2 | LLM Fundamentals | 🟢 Complete |
-| Phase 3 | RAG & Retrieval Systems | ⚪ Planned |
+| Phase 3 | RAG & Retrieval Systems | 🟡 In Progress |
 | Phase 4 | AI Agents | ⚪ Planned |
 | Phase 5 | Fine-tuning & Deployment | ⚪ Planned |
 
@@ -44,7 +44,8 @@
 - Chip Huyen — "Building LLM Applications for Production" + *AI Engineering* (2025)
 - Andrej Karpathy — State of GPT, Tokenization
 - Prompt engineering guides (OpenAI, promptingguide.ai)
-- Anthropic — AI Fluency, Claude 101, Building with the Claude API
+- Anthropic — AI Fluency, Claude 101
+- Anthropic — Building with the Claude API *(in progress: agents and workflows section remaining)*
 - DeepLearning.AI — ChatGPT Prompt Engineering, Building Systems with ChatGPT
 
 **Practice:**
@@ -65,7 +66,8 @@
 - DeepLearning.AI — LangChain Chat with Your Data, Building Agentic RAG
 - Model Context Protocol (MCP) fundamentals
 - Evaluation with RAGAS and the LLM-as-judge pattern
-- **Project 3 — Space Document RAG System**
+- **Project 2 — [Semantic Search Engine](https://github.com/ppimpao/semantic-search-engine)** ✅ — dense retrieval over arXiv astro-ph abstracts, with an evaluation harness (Hit@1 0.93 vs 0.80)
+- **Project 3 — [Space Document RAG System](./03-space-rag)**
 
 ---
 
@@ -77,8 +79,8 @@
 - LangGraph for state machines and control flow
 - Observability and tracing (LangSmith)
 - Multi-agent orchestration (CrewAI, AutoGen, Deep Agents)
-- **Project 4 — Space Data Research Agent**
-- **Project 5 — Multi-Agent Team**
+- **Project 4 — [Space Data Research Agent](./04-space-agent)**
+- **Project 5 — [Multi-Agent Team](./05-multi-agent)**
 
 ---
 
@@ -90,7 +92,7 @@
 - LoRA / PEFT, custom datasets, evaluation
 - MLOps basics: experiment tracking (W&B), containerization (Docker)
 - Deployment with FastAPI, monitoring, and logging
-- **Project 6 — Fine-tuned Model** + a space-adjacent capstone
+- **Project 6 — [Fine-tuned Model](./06-fine-tuned-model)** + a space-adjacent capstone
 
 ---
 
@@ -99,10 +101,11 @@
 | # | Project | Skills | Status |
 |---|---------|--------|--------|
 | 01 | [PaAi — Personal Assistant AI](./01-paai-chatbot) | LLM APIs, memory, FastAPI, evaluation | ✅ Complete |
-| 02 | Space Document RAG System | Embeddings, vector DBs, retrieval, RAGAS | ⚪ Planned |
-| 03 | Space Data Research Agent | LangGraph, tool use, agents | ⚪ Planned |
-| 04 | Multi-Agent Team | Orchestration, role design | ⚪ Planned |
-| 05 | Fine-tuned Model | LoRA, training, evaluation, deployment | ⚪ Planned |
+| 02 | [Semantic Search Engine](https://github.com/ppimpao/semantic-search-engine) | Dense retrieval, embeddings, retrieval evaluation | ✅ Complete |
+| 03 | [Space Document RAG System](./03-space-rag) | Embeddings, vector DBs, retrieval, RAGAS | ⚪ Planned |
+| 04 | [Space Data Research Agent](./04-space-agent) | LangGraph, tool use, agents | ⚪ Planned |
+| 05 | [Multi-Agent Team](./05-multi-agent) | Orchestration, role design | ⚪ Planned |
+| 06 | [Fine-tuned Model](./06-fine-tuned-model) | LoRA, training, evaluation, deployment | ⚪ Planned |
 
 ---
 
