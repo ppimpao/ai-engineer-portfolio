@@ -1,5 +1,5 @@
 # Telegram
-python-telegram-bot>=21.9,<22
+python-telegram-bot>=22.8,<23
 
 # API
 fastapi>=0.115,<1
