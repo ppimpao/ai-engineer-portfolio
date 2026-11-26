@@ -1,5 +1,5 @@
 # Telegram
-python-telegram-bot>=21.9,<22
+python-telegram-bot>=22.8,<23
 
 # API
 fastapi>=0.115,<1
@@ -9,7 +9,7 @@ pydantic-settings>=2.7,<3
 python-multipart>=0.0.20       # file uploads (POST /voice/chat)
 
 # LLM providers
-anthropic>=0.42,<1
+anthropic>=2.12,<3
 ollama>=0.4,<1
 
 # Voice provider (speech-to-text + text-to-speech)
